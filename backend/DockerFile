@@ -1,0 +1,19 @@
+FROM php:8.2-fpm-alpine
+
+# Gerekli bağımlılıkları ve Composer'ı yükle
+RUN apk add --no-cache nginx curl git unzip icu-dev \
+    && docker-php-ext-install pdo pdo_sqlite intl
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+# Proje dosyalarını kopyala
+COPY . .
+
+# Composer bağımlılıklarını kur
+RUN composer install --no-dev --optimize-autoloader
+
+# Port ayarı ve Sunucuyu Başlatma
+EXPOSE 8000
+CMD php -S 0.0.0.0:8000 -t public
