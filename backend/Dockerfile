@@ -18,7 +18,10 @@ RUN sed -ri -s 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 RUN a2enmod rewrite
-
+RUN printf '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>\n' > /etc/apache2/conf-available/symfony.conf && a2enconf symfony
 WORKDIR /var/www/html
 COPY . .
 
