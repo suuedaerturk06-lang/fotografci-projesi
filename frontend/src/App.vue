@@ -34,10 +34,10 @@ const fetchPhotographers = async () => {
     if (selectedStyle.value) params.style = selectedStyle.value
     if (maxPrice.value) params.maxPrice = maxPrice.value
 
-    const response = await axios.get('http://127.0.0.1:8000/api/photographers', { params })
+    const response = await axios.get('https://fotografci-projesi-production.up.railway.app/api/photographers', { params })
     photographers.value = response.data
   } catch (err) {
-    error.value = 'Veriler çekilirken bir hata oluştu. Symfony sunucusunun (8000 portu) açık olduğundan emin olun.'
+    error.value = 'Veriler çekilirken bir hata oluştu. Sunucu bağlantısını kontrol edin.'
     console.error(err)
   } finally {
     loading.value = false
