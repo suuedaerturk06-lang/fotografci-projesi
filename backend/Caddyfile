@@ -2,3 +2,6 @@
 
 root * public
 php_server
+
+# Statik dosya olmayan tüm istekleri index.php'ye yönlendir (Symfony Routing)
+try_files {path} {path}/ /index.php?{query}
