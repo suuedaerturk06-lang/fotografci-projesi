@@ -1,19 +1,28 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-apache
 
-# Gerekli bağımlılıkları ve Composer'ı yükle
-RUN apk add --no-cache nginx curl git unzip icu-dev \
-    && docker-php-ext-install pdo pdo_sqlite intl
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libzip-dev \
+    unzip \
+    git \
+    sqlite3 \
+    libsqlite3-dev
+
+RUN docker-php-ext-install pdo pdo_sqlite intl zip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+VIRTUAL_HOST localhost
 
-# Proje dosyalarını kopyala
+RUN sed -ri -s 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+
+RUN a2enmod rewrite
+
+WORKDIR /var/www/html
 COPY . .
 
-# Composer bağımlılıklarını kur
 RUN composer install --no-dev --optimize-autoloader
 
-# Port ayarı ve Sunucuyu Başlatma
-EXPOSE 8000
-CMD php -S 0.0.0.0:8000 -t public
+RUN chown -R www-data:www-data var public
