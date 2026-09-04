@@ -3,11 +3,10 @@
 }
 
 :8080 {
-    root * public
+    root * /app/public
     encode zstd gzip
     
-    # PHP işlemlerinin root dizin üzerinden çalışmasını sağla
     php_server {
-        root public
+        index index.php
     }
 }
