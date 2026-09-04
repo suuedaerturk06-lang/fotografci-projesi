@@ -5,5 +5,9 @@
 :8080 {
     root * public
     encode zstd gzip
-    php_server
+    
+    # PHP işlemlerinin root dizin üzerinden çalışmasını sağla
+    php_server {
+        root public
+    }
 }
