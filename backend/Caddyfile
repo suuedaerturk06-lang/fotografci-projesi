@@ -1,10 +1,9 @@
 {
-    http_port 8080
+    admin off
 }
 
 :8080 {
     root * public
     encode zstd gzip
-    
     php_server
 }
