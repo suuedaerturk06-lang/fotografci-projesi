@@ -1,0 +1,4 @@
+{$SERVER_NAME:0.0.0.0:8080}
+
+root * public
+php_server
